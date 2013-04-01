@@ -20,6 +20,7 @@ $(function($){
       this.$footer = this.$('#footer');
 
       this.listenTo(app.Todos, 'add', this.addOne);
+      this.listenTo(app.Todos, 'filter', this.filterAll);
 
       app.Todos.fetch();
 
@@ -30,12 +31,27 @@ $(function($){
       this.$footer.show();
       this.$footer.html(this.statsTemplate({
       }));
+
+      // Highlight selected filter link
+      this.$('#filters li a')
+        .removeClass('selected')
+        .filter('[href="#/' + (app.TodoFilter || '') + '"]')
+        .addClass('selected');
     },
 
 
     addOne: function(todo){
       var view = new app.TodoView({ model : todo });
       $('#todo-list').append(view.render().el);
+    },
+
+    filterOne : function(todo){
+      todo.trigger('visible');
+    },
+
+    filterAll : function(){
+      app.Todos.each(this.filterOne, this);
+      this.render();
     },
 
     createOnEnter : function(e) {
