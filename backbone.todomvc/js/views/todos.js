@@ -7,7 +7,7 @@ $(function() {
 
   app.TodoView = Backbone.View.extend({
     tagName : 'li',
-    template : _.temlate($('#item-template').html()),
+    template : _.template($('#item-template').html()),
 
     initialize : function(){
       this.listenTo(this.model, 'change', this.render);
@@ -21,6 +21,6 @@ $(function() {
       return this;
     },
 
-    
+
   })
 });
