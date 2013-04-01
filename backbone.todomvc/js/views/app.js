@@ -24,7 +24,7 @@ $(function($){
 
       app.Todos.fetch();
 
-      this.render();
+      this.render(); // 気に入らないので足した
     },
 
     render : function(){
@@ -51,7 +51,7 @@ $(function($){
 
     filterAll : function(){
       app.Todos.each(this.filterOne, this);
-      this.render();
+      this.render(); // 気に入らないので足した
     },
 
     createOnEnter : function(e) {
