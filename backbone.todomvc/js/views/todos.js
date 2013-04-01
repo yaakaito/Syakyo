@@ -16,7 +16,7 @@ $(function() {
     render : function(){
       this.$el.html(this.template(this.model.toJSON()));
       this.$el.toggleClass('completed', this.model.get('completed'));
-      this.$el.toggleClass('hidden', this.isHidden());
+      //this.$el.toggleClass('hidden', this.isHidden());
       this.$input = this.$('.edit');
       return this;
     },
