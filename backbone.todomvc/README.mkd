@@ -1,6 +1,15 @@
 todomvc.com / backbone.js
 
 ## setup
+
 ```
+$ npm install -g bower
 $ bower install
+```
+
+## hint
+
+```
+$ npm install -g jshint
+$ make hint
 ```
