@@ -10,7 +10,8 @@ $(function($){
     statsTemplate : _.template($('#stats-template').html()),
     events : {
       'keypress #new-todo' : 'createOnEnter',
-      'click #toggle-all'  : 'toggleAllComplete'
+      'click #toggle-all'  : 'toggleAllComplete',
+      'click #clear-completed' : 'clearCompleted'
     },
 
     initialize : function() {
@@ -76,6 +77,11 @@ $(function($){
       app.Todos.each(function(todo){
         todo.save({ 'completed' : completed });
       });
+    },
+
+    clearCompleted : function() {
+      _.invoke(app.Todos.completed(), 'destroy');
+      return false;
     }
   });
 
