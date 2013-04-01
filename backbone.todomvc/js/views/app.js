@@ -19,6 +19,7 @@ $(function($){
 
       this.listenTo(app.Todos, 'add', this.addOne);
 
+      app.Todos.fetch();
     },
 
 
