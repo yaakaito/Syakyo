@@ -16,6 +16,7 @@
         <input id="toggle-all" type="checkbox" />
         <ul id="todo-list"></ul>
       </section>
+      <footer id="footer"></footer>
     </section>
   </body>
   <script type="text/x-template" id="item-template">
@@ -25,6 +26,19 @@
       <button class="destory"></button>
     </div>
     <input class="edit" value="<%- title %>">
+  </script>
+  <script type="text/x-template" id="stats-template">
+    <ul id="filters">
+      <li>
+        <a class="selected" href="#/">All</a>
+      </li>
+      <li>
+        <a href="#/active">Active</a>
+      </li>
+      <li>
+        <a href="#/completed">Completed</a>
+      </li>
+    </ul>
   </script>
   <script src="components/todomvc-common/base.js"></script>
   <script src="components/jquery/jquery.js"></script>
