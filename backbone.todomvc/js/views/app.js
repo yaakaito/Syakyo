@@ -21,8 +21,10 @@ $(function($){
       this.$footer = this.$('#footer');
 
       this.listenTo(app.Todos, 'add', this.addOne);
+      this.listenTo(app.Todos, 'reset', this.addAll);
       this.listenTo(app.Todos, 'filter', this.filterAll);
       this.listenTo(app.Todos, 'change:completed', this.filterOne);
+      this.listenTo(app.Todos, 'all', this.render);
 
       app.Todos.fetch();
 
@@ -47,6 +49,11 @@ $(function($){
     addOne: function(todo){
       var view = new app.TodoView({ model : todo });
       $('#todo-list').append(view.render().el);
+    },
+
+    addAll : function() {
+      this.$('#todo-list').html('');
+      app.Todos.each(this.addOne, this);
     },
 
     filterOne : function(todo){
