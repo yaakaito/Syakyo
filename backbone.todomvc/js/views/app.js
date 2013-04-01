@@ -21,6 +21,7 @@ $(function($){
 
       this.listenTo(app.Todos, 'add', this.addOne);
       this.listenTo(app.Todos, 'filter', this.filterAll);
+      this.listenTo(app.Todos, 'change:completed', this.filterOne);
 
       app.Todos.fetch();
 
@@ -30,6 +31,8 @@ $(function($){
     render : function(){
       this.$footer.show();
       this.$footer.html(this.statsTemplate({
+        completed : app.Todos.completed().length,
+        remaining : app.Todos.remaining().length
       }));
 
       // Highlight selected filter link
@@ -47,6 +50,7 @@ $(function($){
 
     filterOne : function(todo){
       todo.trigger('visible');
+      this.render();// 気に入らないので足した
     },
 
     filterAll : function(){
