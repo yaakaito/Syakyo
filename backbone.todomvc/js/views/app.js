@@ -32,17 +32,29 @@ $(function($){
     },
 
     render : function(){
-      this.$footer.show();
-      this.$footer.html(this.statsTemplate({
-        completed : app.Todos.completed().length,
-        remaining : app.Todos.remaining().length
-      }));
+      var completed = app.Todos.completed().length;
+      var remaining = app.Todos.remaining().length;
 
-      // Highlight selected filter link
-      this.$('#filters li a')
-        .removeClass('selected')
-        .filter('[href="#/' + (app.TodoFilter || '') + '"]')
-        .addClass('selected');
+      if (app.Todos.length) {
+
+        this.$main.show();
+        this.$footer.show();
+
+        this.$footer.html(this.statsTemplate({
+          completed : completed,
+          remaining : remaining
+        }));
+
+        // Highlight selected filter link
+        this.$('#filters li a')
+          .removeClass('selected')
+          .filter('[href="#/' + (app.TodoFilter || '') + '"]')
+          .addClass('selected');
+      }
+      else {
+        this.$main.hide();
+        this.$footer.hide();
+      }
     },
 
 
