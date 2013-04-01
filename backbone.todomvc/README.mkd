@@ -1,0 +1,6 @@
+todomvc.com / backbone.js
+
+## setup
+```
+$ bower install
+```
