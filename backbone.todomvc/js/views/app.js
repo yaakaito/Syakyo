@@ -8,10 +8,12 @@ $(function($){
   app.AppView = Backbone.View.extend({
     el : '#todoapp',
     events : {
-      'keypress #new-todo' : 'createOnEnter'
+      'keypress #new-todo' : 'createOnEnter',
+      'click #toggle-all'  : 'toggleAllComplete'
     },
 
     initialize : function() {
+      this.allCheckbox = this.$('#toggle-all')[0];
       this.$input = this.$('#new-todo');
       this.$main  = this.$('#main');
 
@@ -38,6 +40,12 @@ $(function($){
       this.$input.val('');
     },
 
+    toggleAllComplete : function() {
+      var completed = this.allCheckbox.checked;
+      app.Todos.each(function(todo){
+        todo.save({ 'completed' : completed });
+      });
+    }
   });
 
 });
