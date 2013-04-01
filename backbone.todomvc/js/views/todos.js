@@ -9,6 +9,10 @@ $(function() {
     tagName : 'li',
     template : _.template($('#item-template').html()),
 
+    events : {
+      'click .toggle' : 'toggleCompleted'
+    },
+
     initialize : function(){
       this.listenTo(this.model, 'change', this.render);
     },
@@ -21,5 +25,8 @@ $(function() {
       return this;
     },
 
+    toggleCompleted : function(){
+      this.model.toggle();
+    }
   });
 });
