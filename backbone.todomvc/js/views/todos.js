@@ -10,7 +10,8 @@ $(function() {
     template : _.template($('#item-template').html()),
 
     events : {
-      'click .toggle' : 'toggleCompleted'
+      'click .toggle' : 'toggleCompleted',
+      'dblclick label' : 'edit'
     },
 
     initialize : function(){
@@ -41,6 +42,11 @@ $(function() {
 
     toggleCompleted : function(){
       this.model.toggle();
+    },
+
+    edit : function(){
+      this.$el.addClass('edting');
+      this.$input.focus();
     }
   });
 });
