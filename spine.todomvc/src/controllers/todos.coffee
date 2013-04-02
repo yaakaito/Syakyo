@@ -3,7 +3,8 @@ class window.Todos extends Spine.Controller
 
     constructor : ->
         super
-        
+        @todo.bind 'update', @render
+
     render : =>
         @replace $.trim( TPL( @todo ) )
         @
