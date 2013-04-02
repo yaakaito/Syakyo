@@ -45,7 +45,7 @@ $(function() {
     },
 
     edit : function(){
-      this.$el.addClass('edting');
+      this.$el.addClass('editing');
       this.$input.focus();
     }
   });
