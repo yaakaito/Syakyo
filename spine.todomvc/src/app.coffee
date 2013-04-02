@@ -11,6 +11,7 @@ class TodoApp extends Spine.Controller
     constructor : ->
         super
         Todo.bind 'create', @addNew
+        Todo.fetch()
 
     new : (e) ->
         val = $.trim @newTodoInput.val()
