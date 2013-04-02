@@ -15,7 +15,6 @@ class TodoApp extends Spine.Controller
         super
         Todo.bind 'create', @addNew
         Todo.bind 'refresh change', @toggleElems
-        Todo.fetch()
 
     new : (e) ->
         val = $.trim @newTodoInput.val()
@@ -36,7 +35,7 @@ class TodoApp extends Spine.Controller
         isTodos = !!Todo.count()
         @main.toggle isTodos
         @toggleAllElem.removeAttr 'checked' if !Todo.completed().length
-        
+
 $ ->
     new TodoApp el : $('#todoapp')
     Spine.Route.setup()
