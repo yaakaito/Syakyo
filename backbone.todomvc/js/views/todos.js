@@ -12,6 +12,7 @@ $(function() {
     events : {
       'click .toggle' : 'toggleCompleted',
       'dblclick label' : 'edit',
+      'click .destroy' : 'clear',
       'keypress .edit' : 'updateOnEnter',
       'blur .edit' : 'close'
     },
@@ -68,6 +69,10 @@ $(function() {
       }
 
       this.$el.removeClass('editing');
+    },
+
+    clear : function(){
+      this.model.destroy();
     }
   });
 });
