@@ -1,11 +1,10 @@
 {
-  "name" : "todmvc-backbone",
+  "name" : "todmvc-spine",
   "version" : "0.0.0",
   "dependencies" : {
-    "backbone" : "~1.0.0",
-    "underscore" : "~1.4.4",
-    "jquery" : "~1.9.1",
+    "spine" : "~1.0.9",
     "todomvc-common" : "~0.1.2",
-    "backbone.localStorage" : "~1.1.0"
+    "handlebars" : "~1.0.0-rc.3",
+    "jquery" : "~1.9.1"
   }
 }
