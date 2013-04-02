@@ -1,0 +1,15 @@
+todomvc.com / coffeescript+spine
+
+## setup
+
+```
+$ npm install -g bower
+$ bower install
+```
+
+## hint
+
+```
+$ npm install -g jshint
+$ make hint
+```
