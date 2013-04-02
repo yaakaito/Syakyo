@@ -1,0 +1,43 @@
+<!doctype>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>Syakyo / Spine.coffee • TodoVC</title>
+  <link rel="stylesheet" href="components/todomvc-common/base.css" />
+</head>
+<body>
+  <section id="todoapp">
+    <header>
+      <h1>todos</h1>
+      <input id="new-todo" placeholder="What needs to be done?" autofocus />
+    </header>
+    <section>
+      <ul id="todo-list">
+      </ul>
+    </section>
+  </section>
+  <script type="text/x-handlebars-template" id="todo-template">
+  {{#this}}
+  <li {{#if completed}}class="complete"{{/if}}>
+    <div class="view">
+      <input class="toggle" type="checkbox" {{#if completed}}checked{{/if}}>
+      <label>{{title}}</label>
+      <button class="destroy"></button>
+    </div>
+    <input class="edit" value="{{title}}" />
+  </li>
+  {{/this}}
+  </script>
+  <script src="components/todomvc-common/base.js"></script>
+  <script src="components/jquery/jquery.js"></script>
+  <script src="components/handlebars/handlebars.js"></script>
+  <script src="components/spine/lib/spine.js"></script>
+  <script src="components/spine/lib/route.js"></script>
+  <script src="components/spine/lib/local.js"></script>
+
+  <script src="js/models/todo.js"></script>
+  <script src="js/controllers/todos.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
