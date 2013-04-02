@@ -11,7 +11,9 @@ $(function() {
 
     events : {
       'click .toggle' : 'toggleCompleted',
-      'dblclick label' : 'edit'
+      'dblclick label' : 'edit',
+      'keypress .edit' : 'updateOnEnter',
+      'blur .edit' : 'close'
     },
 
     initialize : function(){
@@ -47,6 +49,25 @@ $(function() {
     edit : function(){
       this.$el.addClass('editing');
       this.$input.focus();
+    },
+
+    updateOnEnter : function(e){
+      if (e.which === ENTER_KEY) {
+        this.close();
+      }
+    },
+
+    close : function(){
+      var value = this.$input.val().trim();
+
+      if (value) {
+        this.model.save({ title : value });
+      }
+      else {
+        this.clear();
+      }
+
+      this.$el.removeClass('editing');
     }
   });
 });
