@@ -7,6 +7,7 @@ var slice = array.slice; // ショートハンド
 var Events = Backbone.Events = {
     /*
         nameはstringかobject(マップ型で渡されることもある)
+        on だけ中途半端にvar使っててウケる
      */
     on: function(name, callback, context) {
         // eventsApiに聞いてみて、オーバーロードされてる形ならあとはeventsApiに任せる
@@ -27,9 +28,55 @@ var Events = Backbone.Events = {
     },
 
     /*
+        イベントなんてなかった
+    */
+    off: function(name, callback, context) {
+        var retain, ev, events, names, i, l, j, k; //ループカウンターおおい
+        // オーバーロード on見ろ
+        // あとイベント登録されてなかったらスルー
+        if(!this._events || !eventsApi(this, 'off', name, [callback, context])) return this;
+
+        // 全消し、ようするに、ばよえ〜ん(適当)
+        if(!name && !callback && !context) {
+            this._events = {};
+            return this;
+        }
+
+        // nameなかったら全部、ようするに、だいあきゅーと(適当)
+        // 無念な感じある
+        names = name ? [name] : _.keys(this._events);
+        for (i = 0, l = names.length; i < l; i++) {
+            name = names[i]; 
+            // イベント登録されてたら
+            if(events = this._events[name]) {
+                // 残すものはretainに突っ込んでいく
+                // コピーしたので、本体は一回消す
+                this._events[name] = retain = [];
+                // callbackかcontextがあったら
+                if (callback || context) {
+                    // 全部回してみて
+                    for(j = 0, k = events.length; i < l; i++) {
+                        ev = events[j];
+                        // 消してよいのか判定する、長い
+                        if((callback && callback !== ev.callback && callback !== ev.callback._callback) || // コールバックがあるとき
+                           (context && context !== ev.context)) { // コンテキストがあるとき
+                            // 消すものじゃなかったら、retain経由で残す
+                            retain.push(ev);
+                        }
+                    }
+                }
+                // retainが空 is 全部消すべき なので delete
+                if(!retain.length) delete this._events[name];
+            }
+        }
+
+        return this;
+    },
+
+    /*
         イベント発火！
     */
-    trigger : function() {
+    trigger: function() {
         if(!this._events) return this; // イベントなんてなかった
         var args = slice.call(arguments, 1); // 通常発火用の引数取り出し
         
