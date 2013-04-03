@@ -1,7 +1,9 @@
 var Backbone = {}
 
-// メソッドチェインがサポートされるので全部 this 返してくるよ！
+var array = [];
+var slice = array.slice; // ショートハンド
 
+// メソッドチェインがサポートされるので全部 this 返してくるよ！
 var Events = Backbone.Events = {
     /*
         nameはstringかobject(マップ型で渡されることもある)
@@ -19,7 +21,30 @@ var Events = Backbone.Events = {
     
         // イベントを登録
         // ctxがよくわからん、なかった時用？？？
-        events.push({callback: callbacl, context: context, ctx: context || this});
+        events.push({callback: callback, context: context, ctx: context || this});
+
+        return this;
+    },
+
+    /*
+        イベント発火！
+    */
+    trigger : function() {
+        if(!this._events) return this; // イベントなんてなかった
+        var args = slice.call(arguments, 1); // 通常発火用の引数取り出し
+        
+        // オーバーロード (onを参照)
+        if(!eventsApi(this, 'trigger', name, args)) return this; 
+
+        // 対象になるイベントとってくる
+        var events = this._events[name];
+        var allEvents = this._events.all; // 'all'で登録されたもの
+
+        // nameに該当するイベントを発火 引数にイベント名なし
+        if(events) triggerEvents(events, args);
+
+        // allのイベントを発火 出元を知る為に引数にイベント名を含める
+        if(events) triggerEvents(allEvents, arguments);
 
         return this;
     }
@@ -74,6 +99,15 @@ var eventsApi = function(obj, action, name, rest) {
     // ここまできた場合は一番シンプルな形 on('hoge', callback, context) で呼び出されているときなので、
     // それぞれの処理をお願いするために成功させる
     return true;
+}
+
+// 内部的になんかしたいことがあるかもしれないので、引数３つまでは呼び方を変えているが、
+// いまのところ使ってない感じなのでシンプルにしてある
+var triggerEvents = function(events, args) {
+    var ev, i = -1, l = events.length;
+    while(++i < l) { // _.each じゃ駄目なんだろうか
+        (ev = events[i]).callback.apply(ev.ctx, args);
+    }
 }
 
 // ---------- Copy from backbone -------------- //
