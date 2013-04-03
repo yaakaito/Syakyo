@@ -23,7 +23,6 @@ var Events = Backbone.Events = {
         // イベントを登録
         // ctxがよくわからん、なかった時用？？？
         events.push({callback: callback, context: context, ctx: context || this});
-
         return this;
     },
 
@@ -76,7 +75,7 @@ var Events = Backbone.Events = {
     /*
         イベント発火！
     */
-    trigger: function() {
+    trigger: function(name) {
         if(!this._events) return this; // イベントなんてなかった
         var args = slice.call(arguments, 1); // 通常発火用の引数取り出し
         
@@ -91,7 +90,7 @@ var Events = Backbone.Events = {
         if(events) triggerEvents(events, args);
 
         // allのイベントを発火 出元を知る為に引数にイベント名を含める
-        if(events) triggerEvents(allEvents, arguments);
+        if(allEvents) triggerEvents(allEvents, arguments);
 
         return this;
     }
