@@ -64,6 +64,7 @@ class TodoApp extends Spine.Controller
     toggleElems : =>
         isTodos = !!Todo.count()
         @main.toggle isTodos
+        @footer.toggle isTodos
         @toggleAllElem.removeAttr 'checked' if !Todo.completed().length
 
     renderFooter : =>
