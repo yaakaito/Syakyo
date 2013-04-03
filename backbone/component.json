@@ -1,0 +1,10 @@
+{
+    "name" : "backbone",
+    "version" : "0.0.0",
+    "dependencies" : {
+        "underscore" : "*",
+        "jquery" : "*",
+        "qunit" : "*",
+        "json2" : "*"
+    }
+}
