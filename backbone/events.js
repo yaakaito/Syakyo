@@ -132,7 +132,7 @@ var Events = Backbone.Events = {
             }
         }
         return this;
-        
+
     }
 }
 
@@ -198,25 +198,32 @@ var triggerEvents = function(events, args) {
 // listenToとlistenOnceの実装
 var listenMethods = {listenTo : 'on', listenToOnce : 'once'};
 
+/*
+ 他のオブジェクトのイベントを監視する
+ other.on(name, callback)の代わり
+ 対象を追従してくれる、突然消えたりしても安全？
+ */
 _.each(listenMethods, function(implementation, method) {
     Events[method] = function (obj, name, callback) {
+
         // _listenersというところにリッスンしてるやつが入ってるっぽい
         // まだなかったら作る
         var listeners = this._listeners || (this._listeners = {});
         
-        // listen対象のオブジェクトにidが割り当てられていたらそれを利用 or 割り当てる
+        // listen対象のオブジェクトにidがすでに割り当てられていたらそれを利用 or 割り当てる
         var id = obj._listenerId || (obj._listenerId = _.uniqueId('l'));
-        // よく動きが予測できない
+
+        // Event._listeners に listenerId をキーにしてトラックするオブジェクトを配置する
         listeners[id] = obj;
         
         // オーバーライド / マップ形式なので、on/onceに対する第二引数にcontextが期待されるため
         // 下で渡す第二引数がcontextになるように調整する
         if (typeof name == 'object') callback = this;
 
-        // on / once 呼び出し
+        // 対象のオブジェクトから on / once 呼び出し
         obj[implementation](name, callback, this);
 
-        return this; // 上のそのままreturnしていい気がする
+        return this;
     }
 });
 
