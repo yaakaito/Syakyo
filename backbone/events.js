@@ -112,19 +112,25 @@ var Events = Backbone.Events = {
 
     stopListening : function(obj, name, callback) {
         var listeners = this._listeners;
+
+        // なにもlistenerがないときは何もしない
         if (!listeners) return this;
 
-        // nameもcallbackもなければ全部消すモード
+        // nameもcallbackもなければ消すモード
         var deleteListener = !name && !callback;
 
         // オーバーロード
         if (typeof name === 'object') callback = this;
 
-
+        // オーバーロード
+        // objが指定されている場合は、空のlistenersを作り直して、それだけが入った状態にする
+        // あとの処理のために形を合わせる
         if (obj) {
             (listeners = {})[obj._listenerId] = obj;
         }
 
+        // それぞれにoffをよびだす
+        // 消すモードならdeleteしてしまう
         for (var id in listeners) {
             listeners[id].off(name, callback, this);
             if (deleteListener) {
@@ -202,6 +208,7 @@ var listenMethods = {listenTo : 'on', listenToOnce : 'once'};
  他のオブジェクトのイベントを監視する
  other.on(name, callback)の代わり
  対象を追従してくれる、突然消えたりしても安全？
+ cotextは自身なので、きちんと this が自分を指して返ってくる
  */
 _.each(listenMethods, function(implementation, method) {
     Events[method] = function (obj, name, callback) {
@@ -213,7 +220,8 @@ _.each(listenMethods, function(implementation, method) {
         // listen対象のオブジェクトにidがすでに割り当てられていたらそれを利用 or 割り当てる
         var id = obj._listenerId || (obj._listenerId = _.uniqueId('l'));
 
-        // Event._listeners に listenerId をキーにしてトラックするオブジェクトを配置する
+        // this._listeners に listenerId をキーにしてトラックするオブジェクトを配置する
+        // これで参照できるようになった
         listeners[id] = obj;
         
         // オーバーライド / マップ形式なので、on/onceに対する第二引数にcontextが期待されるため
