@@ -171,6 +171,31 @@ var triggerEvents = function(events, args) {
     }
 }
 
+// listenToとlistenOnceの実装
+var listenMethods = {listenTo : 'on', listenToOnce : 'once'};
+
+_.each(listenMethods, function(implementation, method) {
+    Events[method] = function (obj, name, callback) {
+        // _listenersというところにリッスンしてるやつが入ってるっぽい
+        // まだなかったら作る
+        var listeners = this._listeners || (this._listeners = {});
+        
+        // listen対象のオブジェクトにidが割り当てられていたらそれを利用 or 割り当てる
+        var id = obj._listenerId || (obj._listenerId = _.uniqueId('l'));
+        // よく動きが予測できない
+        listeners[id] = obj;
+        
+        // オーバーライド / マップ形式なので、on/onceに対する第二引数にcontextが期待されるため
+        // 下で渡す第二引数がcontextになるように調整する
+        if (typeof name == 'object') callback = this;
+
+        // on / once 呼び出し
+        obj[implementation](name, callback, this);
+
+        return this; // 上のそのままreturnしていい気がする
+    }
+});
+
 // ---------- Copy from backbone -------------- //
 
 $(document).ready(function() {
