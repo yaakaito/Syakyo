@@ -108,8 +108,32 @@ var Events = Backbone.Events = {
         if(allEvents) triggerEvents(allEvents, arguments);
 
         return this;
-    }
+    },
 
+    stopListening : function(obj, name, callback) {
+        var listeners = this._listeners;
+        if (!listeners) return this;
+
+        // nameもcallbackもなければ全部消すモード
+        var deleteListener = !name && !callback;
+
+        // オーバーロード
+        if (typeof name === 'object') callback = this;
+
+
+        if (obj) {
+            (listeners = {})[obj._listenerId] = obj;
+        }
+
+        for (var id in listeners) {
+            listeners[id].off(name, callback, this);
+            if (deleteListener) {
+                delete this._listeners[id];
+            }
+        }
+        return this;
+        
+    }
 }
 
 var eventSplitter = /\s+/;
