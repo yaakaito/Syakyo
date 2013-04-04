@@ -21,7 +21,7 @@ var Events = Backbone.Events = {
         var events = this._events[name] || (this._events[name] = []);       
     
         // イベントを登録
-        // ctxがよくわからん、なかった時用？？？
+        // ctxがよくわからん、なかった時用？？？ -> triggerで叩かれるのは ctx の方っぽい
         events.push({callback: callback, context: context, ctx: context || this});
         return this;
     },
@@ -196,7 +196,7 @@ var eventsApi = function(obj, action, name, rest) {
 // いまのところ使ってない感じなのでシンプルにしてある
 var triggerEvents = function(events, args) {
     var ev, i = -1, l = events.length;
-    while(++i < l) { // _.each じゃ駄目なんだろうか
+    while(++i < l) { // _.each じゃ駄目なんだろうか -> パフォーマンス？
         (ev = events[i]).callback.apply(ev.ctx, args);
     }
 }
@@ -209,6 +209,8 @@ var listenMethods = {listenTo : 'on', listenToOnce : 'once'};
  other.on(name, callback)の代わり
  対象を追従してくれる、突然消えたりしても安全？
  cotextは自身なので、きちんと this が自分を指して返ってくる
+
+ https://github.com/documentcloud/backbone/pull/1461
  */
 _.each(listenMethods, function(implementation, method) {
     Events[method] = function (obj, name, callback) {
