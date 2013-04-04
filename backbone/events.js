@@ -26,6 +26,21 @@ var Events = Backbone.Events = {
         return this;
     },
 
+    once : function(name, callback, context) {
+        // オーバーロード っ on
+        if(!eventsApi(this, 'once', name, [callback, context]) || !callback) return this;
+
+        // 1回しか実行できない形にラップしてから登録する
+        var self = this;
+        var once = _.once(function(){
+            // 発火されたら自身を削除
+            self.off(name, once);
+            callback.apply(this, arguments);
+        });
+        once._callback = callback;
+        // 登録は on で
+        return this.on(name, once, context);
+    },
     /*
         イベントなんてなかった
     */
