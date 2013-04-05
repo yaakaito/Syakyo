@@ -43,6 +43,10 @@ Events =
 
         return true
 
+    ###
+    # あるオブジェクトのイベントを監視する other.on のエイリアスでもある
+    # 実際には other(s) への参照を保存していて、こっち側からもイベントを消すことができる
+    ### 
     listenTo: (obj, ev, callback) ->
         obj.bind(ev, callback)
         # this.listeningToに対象をもっておく、なければ作る
@@ -51,13 +55,21 @@ Events =
         @listeningTo.push(obj)
         return this
 
+    ###
+    # listenToの1回版
+    # 仕様がちょっと微妙(だった)、というのも、１回も使われていない状態でstopListeningされても消えない
+    # 修正済み
+    ###
     listenToOnce: (obj, ev, callback) ->
         # こっちは単なるエイリアス
         # これだと、stopListeing() で全部消せなくね？と思うが、そういう仕様なのか？ -> ちがった、なおした
         obj.one(ev, callback)
         return this
 
+    ###
+    # 監視を破棄
     # このメソッド、listenする前に呼ばれると死にますね -> なおした！！！！！！！！
+    ### 
     stopListening: (obj, ev, callback) ->
         # 対象のオブジェクトのものだけ消す or 全部消す
         # これオブジェクトに意図せずnullがはいったときに、全部消されるね？
@@ -75,8 +87,12 @@ Events =
             # undefined いれてリセット []の方がよくね
             @listeningTo = undefined
 
+    ###
+    # イベントの登録を解除、2段階オーバーロードしているのでちょっと複雑
+    # オーバーロードがあんまりよくなかったのでわしがなおした Looks good は頂いたが取り込まれるかは不明
+    ###
     unbind: (ev, callback) ->
-        unless ev
+        unless ev # ちなみにこのオーバーロードは死にます
             # オーバーロード
             # 何も指定されずに呼ばれたら、全部リセット
             @_callbacks = {}
