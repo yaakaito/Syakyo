@@ -18,6 +18,7 @@ class Module
         for key, value of obj when key not in moduleKeywords
             @[key] = value
         obj.extended?.apply(this)
+        return this
 
     @proxy: (func) ->
         => func.apply(this, arguments)
