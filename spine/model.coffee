@@ -46,7 +46,15 @@ class Model extends Module
         result = (record for id, record of @records when callback(record))
         @cloneArray(result)
 
+    @findByAttribute: (name, value) ->
+        for id, record of @records
+            if record[name] is value
+                return record.clone()
+        return null
 
+    @findAllbyAttribute: (name, value) ->
+        @select (item) ->
+            item[name] is value
 
  makeArray = (arg) ->
     Array::slice.call(arg, 0)
