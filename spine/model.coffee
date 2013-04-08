@@ -26,5 +26,27 @@ class Model extends Module
     @exists: (id) ->
         (@records[id] ? @crecords[id])?.clone()
 
+    @refresh: (values, options = {}) ->
+        if options.clear
+            @records  = {}
+            @crecords = {}
+
+        records = @fromJSON(values)
+        records = [records] unless isArray(records)
+
+        for record in records
+            record.id            or= record.cid
+            @records[record.id]    = record
+            @crecords[records.cid] = record
+
+        @trigger 'refresh', @cloneArray(records)
+        return this
+
+    @select: (callback) ->
+        result = (record for id, record of @records when callback(record))
+        @cloneArray(result)
+
+
+
  makeArray = (arg) ->
     Array::slice.call(arg, 0)
