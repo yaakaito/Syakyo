@@ -56,5 +56,26 @@ class Model extends Module
         @select (item) ->
             item[name] is value
 
+    @each: (callback) ->
+        for key, value of @records
+            callback(value.clone())
+
+    @all: ->
+        @cloneArray(@recordsValues())
+
+    @first: ->
+        record = @recordsValues()[0]
+        record?.clone()
+
+    @last: ->
+        values = @recordsValues();
+        record = values[values.length - 1]
+        record?.clone()
+
+    @count: ->
+        @recordsValues().length
+
+    
+
  makeArray = (arg) ->
     Array::slice.call(arg, 0)
