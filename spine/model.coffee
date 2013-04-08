@@ -75,7 +75,15 @@ class Model extends Module
     @count: ->
         @recordsValues().length
 
-    
+    @recordsValues: ->
+        result = []
+        for key, value of @recordsValues
+            result.push(value)
+        return result
+
+    @cloneArray: (array) ->
+        (value.clone() for value in array)
+
 
  makeArray = (arg) ->
     Array::slice.call(arg, 0)
