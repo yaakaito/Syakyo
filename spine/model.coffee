@@ -86,6 +86,19 @@ class Model extends Module
     @destroy: (id, options) ->
         @find(id).destroy(options)
 
+    # この変数名の付け方いいね！
+    @change: (callbackOrParams) ->
+        if typeof callbackOrParams is 'function'
+            @bind('change', callbackOrParams)
+        else
+            @trigger('change', callbackOrParams)
+
+    @fetch: (callbackOrParams) ->
+        if typeof callbackOrParams is 'function'
+            @bind('fetch', callbackOrParams)
+        else
+            @trigger('fetch', callbackOrParams)
+
     @recordsValues: ->
         result = []
         for key, value of @recordsValues
