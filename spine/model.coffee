@@ -75,6 +75,17 @@ class Model extends Module
     @count: ->
         @recordsValues().length
 
+
+    @deleteAll: ->
+        for key, value of @records
+            delete @records[key]
+
+    @destroyAll: ->
+        for key, value of @records
+
+    @destroy: (id, options) ->
+        @find(id).destroy(options)
+
     @recordsValues: ->
         result = []
         for key, value of @recordsValues
@@ -84,6 +95,20 @@ class Model extends Module
     @cloneArray: (array) ->
         (value.clone() for value in array)
 
+
+    detroy: (options = {}) ->
+        @trigger('beforeDestroy', options)
+        # これはキモい
+        delete @constructor.records[@id]
+        delete @constructor.crecords[@cid]
+        @destroyed = true
+        @trigger('destroy', options)
+        # ちょっと違う
+        @trigger('change', 'destroy', options)
+        if @listeningTo
+            @stopListening()
+        @unbind()
+        return this
 
  makeArray = (arg) ->
     Array::slice.call(arg, 0)
