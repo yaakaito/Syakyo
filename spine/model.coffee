@@ -152,6 +152,10 @@ class Model extends Module
     @toJSON: ->
         @recordsValues()
 
+    # formトから作るらしい、使っちゃだめ絶対
+    @fromForm: ->
+        (new this).fromFrom(arguments...)
+
     # マップ形式になっているものをモデルの配列へ変換する
     @recordsValues: ->
         result = []
@@ -312,6 +316,13 @@ class Model extends Module
 
     exists: ->
         @constructor.exists(@id)
+
+    # 凶悪すぎる
+    fromForm: (form) ->
+        result {}
+        for key in $(form).serializedArray()
+            result[key.name] = key.value
+        @load(result)
 
     # レコードに対してアップデートをかける
     update: (options) ->
