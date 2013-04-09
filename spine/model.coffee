@@ -269,6 +269,22 @@ class Model extends Module
             delete result.id
         return result
 
+    clone: ->
+        createObject(this)
+
+    reload: ->
+        return this if @isNew()
+        original = @constructor.find(@id)
+        @load(original.attributes())
+        # えっ・・・・
+        return original
+
+    toJSON: ->
+        @attributes()
+
+    toString: ->
+        "<#{@constructor.className} {#{JSON.stringify(this)}}>"
+
     # レコードに対してアップデートをかける
     update: (options) ->
         @trigger('beforeUpdate', options)
@@ -302,3 +318,8 @@ class Model extends Module
 
  makeArray = (arg) ->
     Array::slice.call(arg, 0)
+
+createObject = Object.create or (o) ->
+    Func = ->
+    Func.prototype = 0
+    new Func()
