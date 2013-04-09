@@ -194,6 +194,21 @@ class Model extends Module
     validate: ->
         # テンプレートメソッド
 
+    # attributeの取り出し
+    # テンプレートとかで使われる感じかなー
+    attributes: ->
+        result = {}
+        # attributesに定義されている値を取り出す
+        for key in @constructor.attributes when key of this
+            if typeof @[key] is 'function'
+                # functionなら実行した結果を
+                result[key] = @[key]()
+            else
+                result[key] = @[key]
+        result.id = @id if @id
+        return result
+
+
     # 自身を破棄する、結構きわどい
     detroy: (options = {}) ->
 
