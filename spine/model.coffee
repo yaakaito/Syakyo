@@ -184,6 +184,16 @@ class Model extends Module
                 @[key] = value
         return this
 
+    # new == セーブされてない状態
+    isNew: ->
+        not @exists()
+
+    isValid: ->
+        not @validate()
+
+    validate: ->
+        # テンプレートメソッド
+
     # 自身を破棄する、結構きわどい
     detroy: (options = {}) ->
 
