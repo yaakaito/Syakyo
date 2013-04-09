@@ -133,6 +133,10 @@ class Model extends Module
         else
             @trigger('fetch', callbackOrParams)
 
+    # モデルをJSONに変換
+    @toJSON: ->
+        @recordsValues()
+
     # マップ形式になっているものをモデルの配列へ変換する
     @recordsValues: ->
         result = []
