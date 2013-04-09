@@ -240,6 +240,26 @@ class Model extends Module
             delete @[key] if @constructor.attributes.indexOf(key) > -1
         return this
 
+    # 単体アップデート用のラッパー、複数アップデートへ変換
+    # ちゃんと分けてるの偉いと思う
+    updateAttribute: (name, value, options) ->
+        atts = {}
+        atts[name] = value
+        @updateAttributes(atts, options)
+
+    # attrbiuteのアップデート、load -> save
+    updateAttributes: (atts, options) ->
+        @load(atts)
+        @save(options)
+
+    # idを上書きする 保存して消すだけ
+    changeID: (id) ->
+        records = @constructor.records
+        records[id] = records[@id]
+        delete records[@id]
+        @id = id 
+        save()
+
     # 自身を破棄する、結構きわどい
     detroy: (options = {}) ->
 
