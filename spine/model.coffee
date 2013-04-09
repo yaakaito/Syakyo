@@ -2,14 +2,15 @@
 # モデルとコレクションがハイブリッドになってると思えば良い
 # クラスプロパティ/メソッドはこのモデルのコレクション
 # それ以外のものはインスタンス
-# で、recordという概念があって、これ自体にはデータのみが入っている
+# で、recordという概念があって、ここにインスタンスが入っている
 ###
 class Model extends Module
     # 個々のインスタンスはEventsは継承していなくて、最終的にこのEventsに集約されている
     @extend Events
 
-    # ここには実際のモデルのデータのみが入っている
+    # ここには実際のモデルのインスタンスが入っている
     @records: {}
+    # 作ったときのレコード？
     @crecords: {}
 
 
@@ -198,7 +199,7 @@ class Model extends Module
         # テンプレートメソッド
 
     # attributeの取り出し
-    # テンプレートとかで使われる感じかなー
+    # テンプレートとか、toJSONとか、クローン作るときにはここからattributeだけコピーされる感じ
     attributes: ->
         result = {}
         # attributesに定義されている値を取り出す
@@ -286,8 +287,11 @@ class Model extends Module
         @trigger('beforeCreate', options)
         @id = @cid unless @id
 
+        # 登録用にクローンを作る
         record =  @dup(false)
+        # 登録する
         @constructor.records[@id] = record
+        # 作ったときのレコード情報
         @constructor.crecords[@cid] = record
 
         clone = record.clone()
