@@ -101,6 +101,13 @@ class Model extends Module
     @count: ->
         @recordsValues().length
 
+    # モデルのインスタンスを作成する
+    @create: (atts, options) ->
+        record = new @(atts)
+        # saveに成功すると対象のオブジェクトが返される
+        # 失敗した場合は false が返される
+        return record.save(options)
+
     # とにかくすべて破棄する、イベントが呼ばれない
     # = {} でも良い気がするが
     @deleteAll: ->
