@@ -354,6 +354,59 @@ class Model extends Module
         clone.trigger('change', 'create', options)
         return clone
 
+    # Eventsのラッパー なんかここだけコーディング規約が違う
+    bind: (events, callback) ->
+        # クラスの方についてるEventsにbindする
+        # recordが渡たされて、かつ自身であると判断できた場合にapplyする
+        @constructor.bind events, binder = (record) =>
+            if record && @eql(record)
+                callback.apply(this, arguments)
+
+        # unbindが送られたときに、bindを解除するためのラッパー関数を登録していく
+        for singleEvent in events.split(' ')
+            do (singleEvent) =>
+                @constructor.bind 'unbind', unbinder = (record, event, cb) =>
+                    if record && @eql(record)
+                        return if event and event isnt singleEvent
+                        return if cb and cb isnt callback
+                        @constructor.unbind(singleEvent, binder)
+                        @constructor.unbind('unbind', unbinder)
+        return this
+
+    one: (events, callback) ->
+        @bind events, =>
+            @unbind(events, arguments.callee)
+            callback.apply(this, arguments)
+
+    trigger: (args...) ->
+        args.splice(1, 0, this)
+        @constructor.trigger(arg...)
+
+    listenTo: (obj, events, callback) ->
+        obj.bind event, callback 
+        @listeningTo or= []
+        @listeningTo.push(obj)
+
+    listenToOnce: (obj, events, callback) ->
+        obj.bind events, =>
+            obj.unbind(events, arguments.callee)
+            callback.apply(obj, arguments)
+    stopListening: (obj, events, callback)  ->
+        if obj
+            obj.unbind events, callback
+            idx = @listeningTo.indexOf(obj)
+            @listeningTo.splice(idx, 1) unless idx is -1
+        else
+            for obj in @listeningTo
+                obj.unbind()
+            @listeningTo = undefined
+    unbind: (events, calback) ->
+        if events
+            for event in events.split(' ')
+                @trigger('unbind', event, callback)
+        else
+            @trigger('unbind')
+
  makeArray = (arg) ->
     Array::slice.call(arg, 0)
 
