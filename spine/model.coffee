@@ -257,7 +257,7 @@ class Model extends Module
         records = @constructor.records
         records[id] = records[@id]
         delete records[@id]
-        @id = id 
+        @id = id
         save()
 
     # 自身を破棄する、結構きわどい
@@ -309,6 +309,9 @@ class Model extends Module
 
     toString: ->
         "<#{@constructor.className} {#{JSON.stringify(this)}}>"
+
+    exists: ->
+        @constructor.exists(@id)
 
     # レコードに対してアップデートをかける
     update: (options) ->
