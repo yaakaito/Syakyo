@@ -1,15 +1,18 @@
 ###
 # モデルとコレクションがハイブリッドになってると思えば良い
 # クラスプロパティ/メソッドはこのモデルのコレクション
-# そのプロパティのリストにモデル単品が入ってると思うと理解が早いと思う
+# それ以外のものはインスタンス
+# で、recordという概念があって、これ自体にはデータのみが入っている
 ###
 class Model extends Module
     # 個々のインスタンスはEventsは継承していなくて、最終的にこのEventsに集約されている
     @extend Events
 
-    # 実際にモデルが入るところ idをキーにする
+    # ここには実際のモデルのデータのみが入っている
     @records: {}
     @crecords: {}
+
+
     @attributes: []
 
     # モデルの設定
@@ -184,7 +187,7 @@ class Model extends Module
                 @[key] = value
         return this
 
-    # new == セーブされてない状態
+    # new == セーブ(create)されてない状態
     isNew: ->
         not @exists()
 
@@ -208,6 +211,28 @@ class Model extends Module
         result.id = @id if @id
         return result
 
+    save: (options = {}) ->
+        # validateが通っていないものなら先にvalidateを通す
+        unless options.validate is false
+            error = @validate()
+            if error
+                @trigger('error', error)
+                return false
+
+        @trigger('beforeSave', options)
+        # まだsaveされてないものだったらcreate
+        # すでにあったらupdateする
+        record = if @isNew() then @create(options) else @update(options)
+        @stripCloneAttrs()
+        @trigger('save', options)
+        return record
+
+    # attributesに登録されているもの以外を削除する
+    stripCloneAttrs: ->
+        return if @hasOwnProperty 'cid'
+        for own key, value of @
+            delete @[key] if @constructor.attributes.indexOf(key) > -1
+        return this
 
     # 自身を破棄する、結構きわどい
     detroy: (options = {}) ->
@@ -234,6 +259,34 @@ class Model extends Module
             @stopListening()
         @unbind()
         return this
+
+    # レコードに対してアップデートをかける
+    update: (options) ->
+        @trigger('beforeUpdate', options)
+
+        # 実データに対してアップデート
+        records = @construcor.records
+        records[@id].load @attributes()
+
+        # 操作するのはクローン
+        clone = records[@id].clone()
+        clone.trigger('update', options)
+        clone.trigger('change', 'update', options)
+        return clone
+
+    create:(options) ->
+        @trigger('beforeCreate', options)
+        @id = @cid unless @id
+
+        record =  @dup(false)
+        @constructor.records[@id] = record
+        @constructor.crecords[@cid] = record
+
+        clone = record.clone()
+        clone.trigger('create', options)
+        clone.trigger('change', 'create', options)
+        return clone
+
 
  makeArray = (arg) ->
     Array::slice.call(arg, 0)
