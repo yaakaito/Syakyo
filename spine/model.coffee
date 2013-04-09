@@ -108,6 +108,10 @@ class Model extends Module
         # 失敗した場合は false が返される
         return record.save(options)
 
+    # 対象のidに対するattributeのアップデート
+    @update: (id, atts, options) ->
+        @find(id).updateAttributes(atts, options)
+
     # とにかくすべて破棄する、イベントが呼ばれない
     # = {} でも良い気がするが
     @deleteAll: ->
