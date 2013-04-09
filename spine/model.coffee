@@ -4,6 +4,7 @@
 # そのプロパティのリストにモデル単品が入ってると思うと理解が早いと思う
 ###
 class Model extends Module
+    # 個々のインスタンスはEventsは継承していなくて、最終的にこのEventsに集約されている
     @extend Events
 
     # 実際にモデルが入るところ idをキーにする
@@ -11,13 +12,22 @@ class Model extends Module
     @crecords: {}
     @attributes: []
 
+    # モデルの設定
+    # @configure 'Hoge', 'x', 'y' とするとHogeという名前でxとyというプロパティを持ったモデルになるイメージ
     @configure: (name, attributes...) ->
         @className = name
+        # リセットとか
         @records = {}
         @crecords = {}
+
+        # arrributesの登録
+        # 一旦バインドしてから配列に変換するのかー
+        # これに関しては素直に if とかが分かりやすい気がするなぁ
         @attributes= attributes if attributes.length
         @attributes and= makeArray(@attributes)
         @attributes or= []
+
+        # イベントを全部削除
         @unbind()
         return this
 
