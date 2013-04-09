@@ -260,6 +260,14 @@ class Model extends Module
         @unbind()
         return this
 
+    dup: (newRecord) ->
+        result = new @constructor(@attributes())
+        if newRecord is false
+            result.cid = @cid
+        else 
+            delete result.id
+        return result
+
     # レコードに対してアップデートをかける
     update: (options) ->
         @trigger('beforeUpdate', options)
