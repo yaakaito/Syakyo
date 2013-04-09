@@ -159,6 +159,30 @@ class Model extends Module
     @cloneArray: (array) ->
         (value.clone() for value in array)
 
+    # ユニークなidの発行
+    @uid: (prefix = '') ->
+        uid = prefix + @idCounter++
+        uid = @uid(prefix) if @exists(uid) # 被った場合は再帰的に作る
+        return uid 
+
+    # Instance
+
+    constructor: (atts) ->
+        super
+        @load atts if atts
+        @cid = @constructor.uid('c-')
+
+    # attsからプロパティを設定する
+    load: (atts) ->
+        # idが指定されている場合はidを利用する
+        if atts.id then @id = atts.id
+        for key, value of atts
+            if atts.hasOwnProperty(key) and typeof @[key] is 'function'
+                # すでに存在するfunctionなら実行するのかー
+                @[key](value)
+            else
+                @[key] = value
+        return this
 
     # 自身を破棄する、結構きわどい
     detroy: (options = {}) ->
