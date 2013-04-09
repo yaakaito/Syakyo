@@ -212,6 +212,11 @@ class Model extends Module
         result.id = @id if @id
         return result
 
+    # アアアアアア？？？？
+    eql: (rec) ->
+        !!(rec and rec.constructor is @constructor and
+            (rec.cid is @cid) or (rec.id and rec.id is @id))
+
     save: (options = {}) ->
         # validateが通っていないものなら先にvalidateを通す
         unless options.validate is false
@@ -314,7 +319,6 @@ class Model extends Module
         clone.trigger('create', options)
         clone.trigger('change', 'create', options)
         return clone
-
 
  makeArray = (arg) ->
     Array::slice.call(arg, 0)
