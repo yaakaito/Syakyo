@@ -216,7 +216,7 @@ class Model extends Module
         result.id = @id if @id
         return result
 
-    # アアアアアア？？？？
+    # 多分Ruby的な意味で同じレコード = eql ということだと思う
     eql: (rec) ->
         !!(rec and rec.constructor is @constructor and
             (rec.cid is @cid) or (rec.id and rec.id is @id))
