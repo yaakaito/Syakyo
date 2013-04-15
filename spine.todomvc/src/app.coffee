@@ -50,6 +50,8 @@ class TodoApp extends Spine.Controller
         @addNew todo for todo in @getByFilter()
 
     addNew : (todo) =>
+        # newしなくとも、viewを関連づければよくないか？
+        # CollectionController的な？？？
         view = new Todos todo : todo
         @todos.append view.render().el
 
