@@ -1,5 +1,6 @@
 Chaplin = require 'chaplin'
 routes = require 'routes'
+Todos = require 'medels/todos'
 
 # The application object.
 module.exports = class Application extends Chaplin.Application
@@ -44,5 +45,9 @@ module.exports = class Application extends Chaplin.Application
     # Add additional application-specific properties and methods
     # e.g. Chaplin.mediator.prop = null
 
+    mediator = Chaplin.mediator
+    mediator.todos = new Todos()
+    mediator.todos.fetch()
+
     # Seal the mediator.
-    Chaplin.mediator.seal()
+    mediator.seal()
