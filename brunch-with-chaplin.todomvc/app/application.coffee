@@ -1,6 +1,8 @@
 Chaplin = require 'chaplin'
 routes = require 'routes'
 Todos = require 'medels/todos'
+HeaderController = require 'controllers/header-controller'
+FooterController = require 'controllers/footer-controller'
 
 # The application object.
 module.exports = class Application extends Chaplin.Application
@@ -55,3 +57,5 @@ module.exports = class Application extends Chaplin.Application
         mediator.seal()
 
     initControllers: ->
+        new HeaderController()
+        new FooterController()
